@@ -15,7 +15,6 @@ class componentName extends Component {
     this.loadDataById = this.loadDataById.bind(this);
   }
 
-  
   componentWillMount() {
     if(typeof this.props.match.params.id !== 'undefined') {
       this.loadDataById(this.props.match.params.id);
@@ -54,8 +53,7 @@ class componentName extends Component {
         title: this.state.title,
         thumbnailUrl: this.state.thumbnailUrl,
         url: this.state.url
-      }).then((response) => {
-        console.log(response);
+      }).then(() => {
         this.props.history.replace('/');
       }).catch(error => {
         console.log(error);
@@ -65,8 +63,7 @@ class componentName extends Component {
         title: this.state.title,
         thumbnailUrl: this.state.thumbnailUrl,
         url: this.state.url
-      }).then((response) => {
-        console.log(response);
+      }).then(() => {
         this.props.history.replace('/');
       }).catch(error => {
         console.log(error);

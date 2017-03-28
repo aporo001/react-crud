@@ -19,6 +19,11 @@ class Home extends Component
     this.loadData();
   }
 
+  shouldComponentUpdate(nextProps, nextState) {
+    return this.state.data !== nextState.data;
+  }
+  
+
   loadData() {
     Axios.get('http://localhost:5000/photos')
       .then(response => {
