@@ -1,17 +1,39 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import ImageItem from './ImageItem';
-import Axios from 'axios';
+import { loadData, removeData } from '../actions/Photos';
+import { push } from 'react-router-redux'
+ 
+const mapDispatchToProps = (dispatch) => {
+  return {
+    loadData: () => {
+      dispatch(loadData())
+    },
+    removeData: (id) => {
+      dispatch(removeData(id))
+    },
+    goAdd: () => {
+      dispatch(push('/add'))
+    },
+    goEdit: (photoId) => {
+      dispatch(push('/edit/' + photoId))
+    }
+  }
+}
+
+const mapStateToProps = (state) => {
+  return {
+    data: state.photos
+  }
+}
 
 class Home extends Component
 {
   constructor(props) {
     super(props);
-    this.state = {
-      data: [],
-    };
-    this.goAdd = this.goAdd.bind(this);
     this.removePhoto = this.removePhoto.bind(this);
     this.loadData = this.loadData.bind(this);
+    this.goAdd = this.goAdd.bind(this);
     this.goEdit = this.goEdit.bind(this);
   }
 
@@ -20,45 +42,30 @@ class Home extends Component
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    return this.state.data !== nextState.data;
+    return this.props.data !== nextProps.data;
   }
   
-
   loadData() {
-    Axios.get('http://localhost:5000/photos')
-      .then(response => {
-        this.setState({
-          data: response.data
-        });
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    this.props.loadData();
   }
 
   removePhoto (photoId) {
     if(confirm('Are you sure ?')) {
-      Axios.delete('http://localhost:5000/photos/' + photoId)
-        .then(() => {
-          this.loadData();
-        })
-        .catch((error) => {
-          console.log(error)
-        });
+      this.props.removeData(photoId);
     }
   }
 
   goAdd (e) {
     e.preventDefault();
-    this.props.history.push('/add');
+    this.props.goAdd();
   }
 
   goEdit (photoId) {
-    this.props.history.push('/edit/' + photoId);
+    this.props.goEdit(photoId);
   }
 
   render() {
-    const listItems = this.state.data.map((item, i) => (
+    const listItems = this.props.data.map((item, i) => (
       <ImageItem imageUrl={item.url} imageTitle={item.title} key={i} photoId={item.id} removePhoto={this.removePhoto} goEdit={this.goEdit}/>
     ));
 
@@ -74,4 +81,4 @@ class Home extends Component
   }
 }
 
-export default Home;
+export default connect(mapStateToProps, mapDispatchToProps)(Home);

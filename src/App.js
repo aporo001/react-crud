@@ -22,9 +22,7 @@ const NotFound = () => (
 
 
 class App extends Component {
-
   render() {
-
     return (
       <div>
         <Navbar />
@@ -36,10 +34,8 @@ class App extends Component {
             <Route path="/test" component={Test} />
             <Route component={NotFound} />
           </Switch>
-          
         </div>
       </div>
-
     );
   }
 }
